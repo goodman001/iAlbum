@@ -1,0 +1,12 @@
+1.npm install express@4.14.0
+2.nodejs version:v6.9.1
+3.file upload use busboy and fs module
+4.develop web app via Ubuntu 14(64bit)
+5.the return json data fomate: {"results":xxxx}
+6.
+db.userList.insert({'username': 'Eddie', 'password': '123456', 'friends':['Ken', 'Alice', 'Bill']})
+db.userList.insert({'username': 'Bill', 'password': '123456', 'friends':['Eddie', 'Alice']})
+db.userList.insert({'username': 'Ken', 'password': '123456', 'friends':['Eddie', 'Bill']})
+db.userList.insert({'username': 'Alice', 'password': '123456', 'friends':['Eddie', 'Ken']})
+
+

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-us" ng-app="myApp" >
+<head>
+	<meta charset="UTF-8">
+	<title>Title of the document</title>
+	<link href="./stylesheets/mystyles.css" rel="stylesheet" type="text/css" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script>
+	<script src="./javascripts/myscripts.js"></script>
+</head>
+
+<body ng-controller="MainController">
+<div class="container">
+	<div class="header">
+		<div class="htitle">
+			<h1>iAlbum</h1>
+		</div>
+		<div ng-hide="headflag0">
+		<form action="/login" >
+		<div class="hlogs">
+			username<input name="username" ng-model="user.username" type="text" />
+			password<input name="password" ng-model="user.password" type="password" />
+		<div>{{loginerr}}</div>
+                </div>
+		<div class="hlogin">
+			<!--<button type="submit">log in</button>-->
+			<a ng-click="login('/login')">log in</a>
+                </div>
+		</form>
+		</div >
+		<div ng-hide="headflag1">
+		<div class="hlogs">
+			<div class="userinfo">
+				Hello {{username}}!
+			</div>
+		</div>
+		<div class="hlogin">
+                        <!--<button type="submit">log in</button>-->
+                        <a ng-click="logout('/logout')">log out</a>
+                </div>
+		</div>
+		
+	</div>
+	<div class="main">
+		<div class="mainleft">
+			<ul>
+			<li ng-repeat="x in friendlist" >
+				<a  class="nava" id="0" ng-if="$index == 0" ng-click="getalbum('/getalbum/0')">My Album</a>
+				<a  class ="nava" id="{{ x.userID }}" ng-if="$index >= 1" ng-click="getalbum('/getalbum/'+x.userID)">{{x.username}}'s Album</a>
+			</li>
+			</ul>
+		</div>
+		<div class="mainright">
+			<div class="righttop" >
+				<div class="picdiv" ng-repeat="x in pics" ng-hide="smallpics">
+                     <img src="{{x.picurl}}" ng-click="showpic(userflag,x.picid,x.picurl,x.likedby)" />
+					<div class="picbottom">
+						<div class="picbottom1" ng-if="x.likedby != ''">
+							<b ng-repeat="y in x.likedby">{{y}},</b>liked this photo!
+						</div>
+						<div class="picbottom2" ng-hide="rightdelflag" ng-click = "deletephoto('/deletephoto/'+x.picid,lefturl)"><button>Delete</button></div>
+						<div class="picbottom2" ng-hide="rightlikeflag" ng-click = "updatelike('/updatelike/'+x.picid,lefturl)"><button>Like</button></div>
+					</div>
+				</div>
+				<div class="bigpic" ng-hide="bigpics">
+					<div class="bigpictop" ><img ng-click="closepic(userflag)" src="https://freeiconshop.com/files/edd/cross-solid.png" /></div>
+					<div class="bigpicmid">
+						<img src="{{bigpicurl}}"/>
+					</div>
+					<div class="picbottombig">
+						<div class="picbottom1big" ng-if="bigpiclikedby != ''"><b ng-repeat="y in bigpiclikedby">{{y}},</b>liked this photo!</div>
+						<div class="picbottom2big" ng-hide="rightdelflag" ng-click = "deletephoto('/deletephoto/'+bigpicid,lefturl)"><button>Delete</button></div>
+						<div class="picbottom2big" ng-hide="rightlikeflag"><button>Like</button></div>
+					</div>
+				</div>
+			</div>
+			<div class ="rightfoot" ng-hide="rightfootflag0">
+				<input type = "file" file-model = "myFile" accept="image/jpeg"/>
+				<button ng-click = "uploadFile(lefturl)">upload Photo</button>
+			</div>
+		</div>	
+	</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+(function(){
+	var app = angular.module('myApp',[]);
+	app.directive('fileModel', ['$parse', function ($parse) {
+            return {
+               restrict: 'A',
+               link: function(scope, element, attrs) {
+                  var model = $parse(attrs.fileModel);
+                  var modelSetter = model.assign;
+                  
+                  element.bind('change', function(){
+                     scope.$apply(function(){
+                        modelSetter(scope, element[0].files[0]);
+                     });
+                  });
+               }
+            };
+         }]);
+      
+         app.service('fileUpload', ['$http', function ($http) {
+            this.uploadFileToUrl = function(file, uploadUrl){
+               var fd = new FormData();
+               fd.append('file', file);
+            
+               $http.post(uploadUrl, fd, {
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+               })
+            
+               .success(function(){
+               })
+            
+               .error(function(){
+               });
+            }
+         }]);
+	app.controller('MainController', function ($scope, 'fileUpload',$http){
+		$scope.user = {};
+		$scope.logres = "";
+		$scope.loginerr = "";
+		$scope.friendlist = "";
+		$scope.usename = "";
+		$scope.headflag0 = false;
+		$scope.headflag1 = true;
+		$scope.login = function(requestString)
+		{
+			//$scope.detaildata = response.data.results;
+			/*
+			$http.get(requestString).then(function (response) 
+			{
+				$scope.detaildata = response.data.results;
+			}
+			);*/
+			//$scope.user = {};
+			$http.post(requestString,$scope.user).then(function (response) 
+                        {
+                                $scope.logres = response.data.results;
+				if($scope.logres.errmsg !="" && $scope.logres.errmsg != null && $scope.logres.errmsg !=undefined)
+				{
+					$scope.loginerr = $scope.logres.errmsg;
+					$scope.headflag0 = false;
+			                $scope.headflag1 = true;
+					$scope.friendlist = "";
+					$scope.username = "";
+					
+				}else
+				{
+					$scope.loginerr = "";
+					$scope.friendlist = $scope.logres;
+					$scope.username = $scope.friendlist[0].username;
+                                        $scope.headflag0 = true;
+                                        $scope.headflag1 = false;
+				}
+                        }
+                        );
+		}
+		$scope.init = function(requestString)
+		{
+			$http.get(requestString).then(function (response) {
+				$scope.logres = response.data.results;
+				if($scope.logres.errmsg !="" && $scope.logres.errmsg != null && $scope.logres.errmsg !=undefined)
+                                {
+                                        $scope.loginerr = $scope.logres.errmsg
+					$scope.headflag0 = false;
+					$scope.headflag1 = true;
+					$scope.friendlist = "";
+					$scope.username = "";
+                                }else if($scope.logres != "")
+                                {
+                                        $scope.loginerr = "";
+                                        $scope.friendlist = $scope.logres;
+                                        $scope.username = $scope.friendlist[0].username;
+                                        $scope.headflag0 = true;
+                                        $scope.headflag1 = false;
+                                }else
+				{
+					$scope.loginerr = "";
+                                        $scope.headflag0 = false;
+                                        $scope.headflag1 = true;
+                                        $scope.friendlist = "";
+                                        $scope.username = "";
+				}
+
+				
+			});
+		}
+		$scope.init('/init');
+		$scope.logout = function(requestString){
+			$http.get(requestString).then(function (response) 
+			{
+				$scope.logres = response.data.results;
+				$scope.loginerr = "";
+				$scope.headflag0 = false;
+                                $scope.headflag1 = true;
+                                $scope.friendlist = "";
+                                $scope.username = "";
+				
+			});
+		}
+		$scope.uploadFile = function(){
+		       var file = $scope.myFile;
+		       
+		       console.log('file is ' );
+		       console.dir(file);
+		       
+		       var uploadUrl = "/fileUpload";
+		       fileUpload.uploadFileToUrl(file, uploadUrl);
+		}
+
+
+
+
+
+
+	});//controller end
+
+
+
+
+})();

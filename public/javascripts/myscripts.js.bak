@@ -1,0 +1,97 @@
+(function(){
+	var app = angular.module('myApp',[]);
+	app.controller('MainController', function ($scope, $http){
+		$scope.user = {};
+		$scope.logres = "";
+		$scope.loginerr = "";
+		$scope.friendlist = "";
+		$scope.usename = "";
+		$scope.headflag0 = false;
+		$scope.headflag1 = true;
+		$scope.login = function(requestString)
+		{
+			//$scope.detaildata = response.data.results;
+			/*
+			$http.get(requestString).then(function (response) 
+			{
+				$scope.detaildata = response.data.results;
+			}
+			);*/
+			//$scope.user = {};
+			$http.post(requestString,$scope.user).then(function (response) 
+                        {
+                                $scope.logres = response.data.results;
+				if($scope.logres.errmsg !="" && $scope.logres.errmsg != null && $scope.logres.errmsg !=undefined)
+				{
+					$scope.loginerr = $scope.logres.errmsg;
+					$scope.headflag0 = false;
+			                $scope.headflag1 = true;
+					$scope.friendlist = "";
+					$scope.username = "";
+					
+				}else
+				{
+					$scope.loginerr = "";
+					$scope.friendlist = $scope.logres;
+					$scope.username = $scope.friendlist[0].username;
+                                        $scope.headflag0 = true;
+                                        $scope.headflag1 = false;
+				}
+                        }
+                        );
+		}
+		$scope.init = function(requestString)
+		{
+			$http.get(requestString).then(function (response) {
+				$scope.logres = response.data.results;
+				if($scope.logres.errmsg !="" && $scope.logres.errmsg != null && $scope.logres.errmsg !=undefined)
+                                {
+                                        $scope.loginerr = $scope.logres.errmsg
+					$scope.headflag0 = false;
+					$scope.headflag1 = true;
+					$scope.friendlist = "";
+					$scope.username = "";
+                                }else if($scope.logres != "")
+                                {
+                                        $scope.loginerr = "";
+                                        $scope.friendlist = $scope.logres;
+                                        $scope.username = $scope.friendlist[0].username;
+                                        $scope.headflag0 = true;
+                                        $scope.headflag1 = false;
+                                }else
+				{
+					$scope.loginerr = "";
+                                        $scope.headflag0 = false;
+                                        $scope.headflag1 = true;
+                                        $scope.friendlist = "";
+                                        $scope.username = "";
+				}
+
+				
+			});
+		}
+		$scope.init('/init');
+		$scope.logout = function(requestString){
+			$http.get(requestString).then(function (response) 
+			{
+				$scope.logres = response.data.results;
+				$scope.loginerr = "";
+				$scope.headflag0 = false;
+                                $scope.headflag1 = true;
+                                $scope.friendlist = "";
+                                $scope.username = "";
+				
+			});
+		}
+
+
+
+
+
+
+	});//controller end
+
+
+
+
+})();
